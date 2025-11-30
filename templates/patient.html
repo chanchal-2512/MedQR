@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Patient — {{ patient.name }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f4f7fb;
+      margin: 0;
+      padding: 15px;
+      color: #1c1c1c;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      color: #003e6f;
+    }
+
+    .logout-btn {
+      background: #cc0000;
+      border: none;
+      padding: 8px 13px;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .login-btn {
+      background: #0066cc;
+      border: none;
+      padding: 8px 13px;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #0c3b6b;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-right: 8px;
+      margin-bottom: 6px;
+      color: white;
+    }
+
+    .blood-pill { background: #b40000; }
+    .allergy-pill { background: #e67e22; }
+
+    .label { font-weight: 600; }
+  </style>
+
+</head>
+<body>
+
+<!-- TOP HEADER -->
+<div class="topbar">
+  <h2>{{ patient.name }}</h2>
+
+  {% if authorized %}
+    <a href="/api/v1/auth/logout?qr={{ patient.qrId }}">
+      <button class="logout-btn">Logout</button>
+    </a>
+  {% else %}
+    <a href="/api/v1/auth/login?next=/api/v1/patient/{{ patient.qrId }}">
+      <button class="login-btn">🔐 Doctor/Admin Login</button>
+    </a>
+  {% endif %}
+</div>
+
+<!-- BASIC INFO -->
+<div class="card">
+  <div class="section-title">Basic Information</div>
+  <p><span class="label">Patient ID:</span> {{ patient.qrId }}</p>
+  <p><span class="label">Gender:</span> {{ patient.gender }}</p>
+</div>
+
+<!-- BLOOD GROUP -->
+<div class="card">
+  <div class="section-title">Blood Group</div>
+  <span class="pill blood-pill">{{ patient.bloodGroup }}</span>
+</div>
+
+<!-- ALLERGIES -->
+{% if patient.allergies %}
+<div class="card">
+  <div class="section-title">Allergies</div>
+  {% for allergy in patient.allergies %}
+    <span class="pill allergy-pill">{{ allergy }}</span>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- INSURANCE -->
+{% if patient.insurance %}
+<div class="card">
+  <div class="section-title">Insurance</div>
+  <p><span class="label">Provider:</span> {{ patient.insurance.provider }}</p>
+  <p><span class="label">Policy No:</span> {{ patient.insurance.policyNo }}</p>
+</div>
+{% endif %}
+
+<!-- EMERGENCY CONTACTS -->
+{% if patient.contacts %}
+<div class="card">
+  <div class="section-title">Emergency Contact</div>
+  <p><span class="label">Phone:</span> {{ patient.contacts.emergency }}</p>
+</div>
+{% endif %}
+
+<!-- PRESCRIPTIONS (only if authorized) -->
+{% if authorized and patient.prescriptions %}
+<div class="card">
+  <div class="section-title">Prescriptions</div>
+  <ul>
+    {% for p in patient.prescriptions %}
+      <li>{{ p.date }} — {{ p.text }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<!-- MEDICAL VISITS (only if authorized) -->
+{% if authorized and patient.visits %}
+<div class="card">
+  <div class="section-title">Medical Visits</div>
+  <ul>
+    {% for v in patient.visits %}
+      <li>{{ v.date }} — {{ v.dept }} — {{ v.doctor }} {% if v.notes %} — <em>{{ v.notes }}</em>{% endif %}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+</body>
+</html>
