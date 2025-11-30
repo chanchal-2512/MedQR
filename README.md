@@ -1,31 +1,28 @@
-# MedQR — Medical QR System
+MedQR — Smart Medical QR System
 
-MedQR is a web-based application that allows secure access to patient medical records using QR codes. It provides both **public emergency access** for essential patient info and **private access** for doctors and administrators with full medical details.
+MedQR is a secure web application that allows doctors/admins to access full patient medical records and provides public emergency access to essential patient information via QR codes. It integrates MongoDB for data storage, Flask for the backend, and QR codes for easy patient identification.
 
----
+How it Works
 
-## Features
+Doctors/Admins log in to view full patient records, prescriptions, and visits.
 
-- **Private Doctor/Admin Access**  
-  - Full patient details (prescriptions, visits, contacts, insurance)  
-  - Secure login with role-based access  
+Public users can scan a patient’s QR code to see essential info (blood group, allergies, emergency contacts).
 
-- **Public Emergency Access**  
-  - Only essential patient information (blood group, allergies, emergency contacts)  
-  - No login required  
+QR codes are generated automatically for each patient and link to their public page.
 
-- **QR Code Integration**  
-  - Each patient has a unique QR code linking to their public page  
-  - QR codes can be generated automatically from the database  
+Passwords are securely hashed, and session management ensures data privacy.
 
-- **Secure Authentication**  
-  - Users’ passwords are stored as bcrypt hashes  
-  - Session management with Flask  
+How to Run
+Install dependencies:
 
-- **MongoDB Backend**  
-  - Stores users, patients, prescriptions, and visits  
+pip install -r requirements.txt
 
----
 
-## Folder Structure
+Create a .env file with your MongoDB URI and secret keys.
 
+Start the server:
+
+python app.py
+
+
+Access the app at http://localhost:5000.
