@@ -1,4 +1,4 @@
-# MedQR — Smart Medical QR System
+# MedQR — Medical QR System
 
 MedQR is a web-based application that allows secure access to patient medical records using QR codes. It provides both **public emergency access** for essential patient info and **private access** for doctors and administrators with full medical details.
 
